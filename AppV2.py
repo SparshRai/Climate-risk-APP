@@ -50,6 +50,7 @@ st.caption(
 # GLOBAL SESSION STATE — AUTHORITATIVE & CLEAN
 # ------------------------------------------------------------
 STATE_DEFAULTS = {
+    "ai_outputs": {},
     # ========== INTEGRATED RESULTS ==========
     "integrated_ran": False,
     "df_integrated_summary": None,
@@ -251,7 +252,7 @@ gamma_phys = 0.5
 # ------------------------------------------------------------
 @st.cache_data
 def load_ngfs():
-    df = pd.read_csv(r"D:\Project Berlin\ngfs_scenarios.csv")
+    df = pd.read_csv(r"Data/ngfs_scenarios.csv")
     df.columns = df.columns.str.strip().str.replace("﻿", "", regex=False)
     return df
 
@@ -1082,7 +1083,7 @@ with physical_tab:
             }
 
             # ---------------- FLOOD ----------------
-            FLOOD_RASTER = r"D:\Project Berlin\Data\Flood Data\floodMapGL_rp100y.tif"
+            FLOOD_RASTER = r"Data/floodMapGL_rp100y.tif"
             BUFFER_KM = 5
             flood_vals = []
 
@@ -1107,7 +1108,7 @@ with physical_tab:
 
             # ---------------- HEAT ----------------
             heat = pd.read_csv(
-                r"D:\Project Berlin\Data\Heat Data\era5_test_day_grid.csv"
+                r"Data/era5_test_day_grid.csv"
             )
             heat["exceed"] = (heat["temp_c"] >= 35).astype(int)
 
@@ -1125,7 +1126,7 @@ with physical_tab:
 
             # ---------------- CYCLONE ----------------
             cyc = pd.read_csv(
-                r"D:\Project Berlin\Data\Cyclone Data\ibtracs.NI.list.v04r01.csv"
+                r"Data/ibtracs.NI.list.v04r01.csv"
             )[["LAT", "LON", "USA_WIND"]]
 
             cyc = cyc.apply(pd.to_numeric, errors="coerce").dropna()
@@ -2096,7 +2097,7 @@ Rules:
             try:
                 payload = build_advisor_payload()
 
-                groq_client = Groq(api_key=os.getenv("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"))
+                groq_client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
                 response = groq_client.chat.completions.create(
                     model="llama-3.1-8b-instant",
